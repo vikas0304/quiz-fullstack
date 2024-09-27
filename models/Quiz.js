@@ -18,7 +18,7 @@ const QuizSchema = new mongoose.Schema({
   },
   options: [OptionSchema],
   categories: {
-    type: String,
+    type: [String],
     required: true,
   },
   difficulty: {
@@ -28,6 +28,12 @@ const QuizSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
+  toJSON: {
+    transform: (doc, ret) => {
+      delete ret.__v; // Remove the __v field
+      return ret;
+    },
+  },
 });
 
 const Quiz = mongoose.model('Quiz', QuizSchema);
