@@ -27,6 +27,12 @@ app.use('/api/auth', authRoutes);
 // Protect quiz routes with JWT middleware
 app.use('/api/quizzes', authenticateJWT, quizRoutes);
 
+// Error handling middleware for unexpected errors
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
+});
+
 // Error handling for 404
 app.use(notFoundMiddleware);
 

@@ -39,3 +39,10 @@
 2024-09-27T11:25:26.875Z info: HTTP GET /
 2024-09-27T11:25:31.937Z info: HTTP GET /api/quizzes
 2024-09-27T11:25:32.954Z info: HTTP GET /api/quizzes
+2024-09-27T11:42:52.406Z info: HTTP POST /api/quizzes
+2024-09-27T11:42:52.408Z info: Request Body: {"question":"What is the capital of France?","options":[{"text":"Berlin","isCorrect":false},{"text":"Madrid","isCorrect":false},{"text":"Paris","isCorrect":true},{"text":"Lisbon","isCorrect":false}],"categories":["Geography","Europe"],"difficulty":"easy"}
+2024-09-27T11:46:35.065Z info: HTTP GET /api/quizzes
+2024-09-27T11:46:49.106Z info: HTTP GET /api/quizzes
+2024-09-27T11:51:03.727Z info: HTTP GET /api/quizzes
+2024-09-27T11:51:09.757Z info: HTTP GET /api/quizzes
+2024-09-27T11:53:56.158Z info: HTTP GET /api/quizzes
