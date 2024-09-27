@@ -1,11 +1,12 @@
 import Quiz from "../models/Quiz.js";
+import { info , errors} from '../utils/logger.js'
 
 export const getAllQuizzes = async (req, res) => {
     try {
         const quizzes = await Quiz.find(); 
         res.json(quizzes); 
     } catch (err) {
-        console.error('Error fetching quizzes:', err);
+        errors('Error fetching quizzes:', err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
@@ -19,7 +20,7 @@ export const getQuizByID = async(req , res) => {
         }
         res.json(quiz);
     } catch (err) {
-        console.error(`Error fetching quiz with id ${id}:`, err);
+        errors(`Error fetching quiz with id ${id}:`, err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
@@ -33,14 +34,15 @@ export const getQuizByCategory = async ( req , res ) => {
         }
         res.json(quizzes);
     } catch (err) {
-        console.error(`Error fetching quizzes for category ${category}:`, err);
+        errors(`Error fetching quizzes for category ${category}:`, err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
-export const createQuiz = async ( req , res ) => {
+export const createQuiz = async (req, res) => {
     const { question, options, categories, difficulty } = req.body;
     try {
+        // Validate input fields
         if (!question || !options || !categories || !difficulty) {
             return res.status(400).json({ message: 'All fields are required' });
         }
@@ -49,19 +51,29 @@ export const createQuiz = async ( req , res ) => {
             return res.status(400).json({ message: 'There must be exactly 4 options' });
         }
 
+        // Check if the question already exists
+        const existingQuiz = await Quiz.findOne({ question });
+        if (existingQuiz) {
+            return res.status(400).json({ message: 'A quiz with this question already exists' });
+        }
+
+        // Create a new quiz
         const newQuiz = new Quiz({
             question,
             options,
             categories,
             difficulty
         });
+
+        // Save the new quiz
         const savedQuiz = await newQuiz.save();
         res.status(201).json(savedQuiz);
     } catch (err) {
-        console.error('Error saving quiz:', err.message); // Log the exact error
+        errors('Error saving quiz:', err.message); // Log the exact error
         res.status(500).json({ message: 'Internal Server Error', error: err.message });
     }
 }
+
 
 export const updateQuiz = async ( req , res ) => {
     const { id } = req.params;
@@ -84,7 +96,7 @@ export const updateQuiz = async ( req , res ) => {
         const updatedQuiz = await quiz.save();
         res.json(updatedQuiz);
     } catch (err) {
-        console.error(`Error updating quiz with id ${id}:`, err);
+        errors(`Error updating quiz with id ${id}:`, err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
@@ -103,7 +115,7 @@ export const deleteQuiz = async (req , res) => {
         await Quiz.findByIdAndDelete(id);
         res.json({ message: 'Quiz deleted successfully' });
     } catch (err) {
-        console.error(`Error deleting quiz with id ${id}:`, err);
+        errors(`Error deleting quiz with id ${id}:`, err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
